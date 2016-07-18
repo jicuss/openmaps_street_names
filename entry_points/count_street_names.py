@@ -17,7 +17,7 @@ def main(logLevel, logFile):
     logging.basicConfig(filename=logFile, filemode='a+', level=logLevel, format=logFormat)
 
     console = logging.StreamHandler()  # forces logging to the console so user can track progress
-    console.setLevel(logging.DEBUG)
+    console.setLevel(logging.INFO)
 
     logging.getLogger('').addHandler(console)  # add the handler to the root logger
 

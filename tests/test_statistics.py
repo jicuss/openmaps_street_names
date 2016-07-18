@@ -3,6 +3,7 @@ import overpy
 import mock
 import pdb
 import random
+import os
 
 from lib.string_functions.string_operations import fragment_key_formatting
 from lib.statistics import StreetNameStatistics
@@ -12,6 +13,12 @@ from lib.overpass.overpass_api import OverpassAPI
 
 
 class OverpassAPICacheTests(unittest.TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        for f in ["word_occurrences.txt", "street_name_occurances.txt", "normalized_street_name_occurances.txt"]:
+            os.remove(f)
+
     @classmethod
     def setUpClass(cls):
         '''
@@ -68,6 +75,7 @@ class OverpassAPICacheTests(unittest.TestCase):
 
     def setUp(self):
         pass
+
 
     def test_exclusion_of_invalid_county(self):
         ''' verifies that streets without a valid county are not being included in the result set '''

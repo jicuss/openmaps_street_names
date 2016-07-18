@@ -100,17 +100,20 @@ class StreetNameStatistics():
             self.process_node(node)
 
         ''' unnormalized street name count '''
-        logger.debug(u"Steet Name Count")
+        logger.info(u"")
+        logger.info(u"Steet Name Count")
         self.redisObj.hdel('streets', 'n/a')  # remove the count of streets with no defined name
         self.print_and_store_results('streets', 'street_name_occurances.txt')
 
         ''' normalized street name count '''
-        logger.debug(u"Normalized Steet Name Count")
+        logger.info(u"")
+        logger.info(u"Normalized Steet Name Count")
         self.redisObj.hdel('streets_normalized', 'n/a', '')  # remove the count of streets with no defined name
         self.print_and_store_results('streets_normalized', 'normalized_street_name_occurances.txt')
 
         ''' word count '''
-        logger.debug(u"Word Count")
+        logger.info(u"")
+        logger.info(u"Word Count")
         self.print_and_store_results('word_count', 'word_occurrences.txt')
 
     def fetch_results(self, redis_key, output_file = None):
@@ -145,6 +148,7 @@ class StreetNameStatistics():
         if max_range > 10:
             max_range = 10
 
+        logger.info(u"------------------")
         for k in range(0, max_range):
             print sorted_keys[k], count_hash[sorted_keys[k]]
-
+        logger.info(u"------------------")

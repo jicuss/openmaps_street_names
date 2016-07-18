@@ -35,7 +35,7 @@ class OverpassAPI():
         '''
 
         if self.cache.cache_fragment_exists(fragment_key):
-            logger.debug(u"Requesting Cache Fragment: {}".format(fragment_key))
+            logger.info(u"Requesting Cache Fragment: {}".format(fragment_key))
             return self.cache.load_cache_fragment(fragment_key)
 
         else:
@@ -50,7 +50,7 @@ class OverpassAPI():
                     - During the day the Overpass API is more apt to return with a OverpassTooManyRequests error.
                     - Adding the a sleep after failed requests, and running the scripts overnight greatly improved the rate of API call success
             '''
-            logger.debug(u"Making API Service Call\n{}".format(query))
+            logger.info(u"Making API Service Call\n{}".format(query))
             while True:
                 '''
                     Try to make the API request. In the event of a failure, retry indefinitely. If successful, break from the loop
@@ -67,12 +67,12 @@ class OverpassAPI():
                     sleep(30)  # added a sleep function to lesson the burden on the openmaps api. Not explicitly required
 
                 except overpy.exception.OverpassTooManyRequests:
-                    logger.debug("OverpassTooManyRequests. This occurs when the script is spamming the OverpassAPI service. Sleeping for 120s".format(query))
+                    logger.info("OverpassTooManyRequests. This occurs when the script is spamming the OverpassAPI service. Sleeping for 120s".format(query))
                     sleep(120)
                     continue
 
                 except:
-                    logger.debug("Unexpected error:".format(sys.exc_info()))
+                    logger.info("Unexpected error:".format(sys.exc_info()))
                     sleep(15)
                     continue
 

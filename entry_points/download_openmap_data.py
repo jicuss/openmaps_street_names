@@ -9,13 +9,14 @@ from lib.overpass.overpass_api import OverpassAPI
 
 logger = logging.getLogger('')
 
+
 def main(logLevel, logFile):
     logFormat = '%(asctime)s : filename=%(filename)s : threadname=%(threadName)s : linenumber=%(lineno)d : messageType=%(levelname)s : %(message)s'
 
     logging.basicConfig(filename=logFile, filemode='a+', level=logLevel, format=logFormat)
 
     console = logging.StreamHandler()  # forces logging to the console so user can track progress
-    console.setLevel(logging.DEBUG)
+    console.setLevel(logging.INFO)
 
     logging.getLogger('').addHandler(console)  # add the handler to the root logger
 
