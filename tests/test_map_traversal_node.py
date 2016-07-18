@@ -25,22 +25,11 @@ class MapTraversalNodeTests(unittest.TestCase):
 
     # @mock.patch('lib.string_functions.query_statements.box_query_residential',side_effect=['FakeQuery'])
     @mock.patch('lib.map_traversal.map_traversal_node.box_query_residential',side_effect=['FakeQuery'])
-    def test_process_fragment_doesnt_exist(self,mock_query):
-        self.mock_cache.cache_fragment_exists.return_value = False
+    def test_process_fragment(self,mock_query):
         self.node.process()
         self.mock_api.query_api.assert_called_with('FakeQuery',self.node.fragment_key())
         self.assertEquals(self.node.processed,True)
         pass
-
-    # todo rework this, remove calls to the fragment exist method (only for testing)
-
-    def test_process_fragment_does_exist(self):
-        self.mock_cache.cache_fragment_exists.return_value = True
-        self.node.process()
-        self.mock_api.query_api.assert_not_called()
-        self.assertEquals(self.node.processed,True)
-        pass
-
 
     def test_process_fragment_already_processed(self):
         self.node.processed = True

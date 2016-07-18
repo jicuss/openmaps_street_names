@@ -39,7 +39,7 @@ Link | Description
 * Navigate to the location of the cloned repo
 * Install using the command:
 ```
-$ pip install -e . [dev]
+$ pip install -e .[dev]
 ```
 
 ##### Usage:

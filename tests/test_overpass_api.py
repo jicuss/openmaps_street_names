@@ -2,7 +2,7 @@ import unittest
 
 import mock
 import overpy
-from lib.overpass_api_cache import OverpassAPICache
+from lib.overpass.overpass_api_cache import OverpassAPICache
 
 from lib.overpass.overpass_api import OverpassAPI
 
@@ -17,9 +17,7 @@ class OverpassAPITests(unittest.TestCase):
         ''
 
     def test_query_api_if_in_cache(self):
-        '''
-            If the fragment key is found to be in the cache, don’t query the API just return what’s in the cache
-        '''
+        ''' If the fragment key is found to be in the cache, don't query the API just return what's in the cache '''
         self.mock_cache.cache_fragment_exists.return_value = True
         self.mock_cache.load_cache_fragment.return_value = 'example_response'
 
