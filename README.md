@@ -31,3 +31,17 @@ Link | Description
 [Openmaps Language Guide](https://wiki.openstreetmap.org/wiki/Overpass_API/Language_Guide) | The docs for the Overpass QL query language
 [538 Most Common Streets in America](http://fivethirtyeight.com/datalab/whats-the-most-common-street-name-in-america/) | A similar study done by 538. The street counts returned by this library and the 538 study were not identical, though relative occurances of the street names was mostly consistent.
 
+
+##### Installation:
+#
+Clone this repo to your local drive
+Navigate to the location of the cloned repo
+Install using the command pip install -e .[dev]
+
+##### Usage:
+#
+* Run the main library using the command count_street_names
+* Alternatively you can use the command download_map_data first then the count_street_names.
+    - This will download the Openmaps ways data first, then collect descriptive statistics about the street name occurrences as a second pass.
+    - In practice this is a more convenient approach as you will likely have to leave the library running overnight to be able to fully download the input dataset.
+

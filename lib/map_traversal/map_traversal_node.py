@@ -2,14 +2,13 @@ import logging
 
 from lib.overpass.overpass_api_cache import OverpassAPICache
 from lib.string_functions.string_operations import fragment_key_formatting
-
 from lib.overpass.overpass_api import OverpassAPI
 from lib.string_functions.query_statements import box_query_residential
 
 logger = logging.getLogger('')
 
 class MapTraversalNode():
-    def __init__(self, coordinates, api = OverpassAPI(), cache = OverpassAPICache()):
+    def __init__(self, coordinates, api=OverpassAPI(), cache=OverpassAPICache()):
         self.processed = False
         self.south, self.west, self.north, self.east = coordinates
         self.api = api
@@ -17,7 +16,7 @@ class MapTraversalNode():
         self.response = {'ways': []}
 
         '''
-            round the coordinates
+            round the coordinates to the nearest integer
             the node expects integer lat long coordinates.
         '''
         self.south = round(self.south, 0)
@@ -53,14 +52,5 @@ class MapTraversalNode():
         '''
         if not self.processed:
             logger.info("Processing Node {}".format(self.fragment_key()))
-            # todo, remove this where clause, prevents preproccesed nodes from being handled
-            '''
-            if not self.cache.cache_fragment_exists(self.fragment_key()):
-                # todo, remove this try catch
-                try:
-                    self.response = self.api.query_api(box_query_residential(self.coordinates()), self.fragment_key())
-                except:
-                    self.processed = True
-            '''
             self.response = self.api.query_api(box_query_residential(self.coordinates()), self.fragment_key())
             self.processed = True

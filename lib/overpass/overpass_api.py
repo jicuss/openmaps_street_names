@@ -21,13 +21,13 @@ from lib.overpass.overpass_api_cache import OverpassAPICache
 
 logger = logging.getLogger('')
 
-class OverpassAPI():
 
-    def __init__(self, overpy_instance = overpy.Overpass(), cache = OverpassAPICache()):
+class OverpassAPI():
+    def __init__(self, overpy_instance=overpy.Overpass(), cache=OverpassAPICache()):
         self.overpy_instance = overpy_instance
         self.cache = cache
 
-    def query_api(self,query,fragment_key):
+    def query_api(self, query, fragment_key):
         '''
             :param query: An Overpass API query that will be issued using an instance of an Overpy object
             :param fragment_key: A unique query identifier used to store and retrieve the results of an API query.
@@ -39,11 +39,6 @@ class OverpassAPI():
             return self.cache.load_cache_fragment(fragment_key)
 
         else:
-            # todo - remove this! This was used for debugging
-            if 1 == 1:
-                if fragment_key.find('state_') > -1 or fragment_key.find('city_') > -1 or fragment_key.find('coordinate_') > -1:
-                    return {}
-
             '''
                 Issue the API request.
                 Operations:
@@ -69,7 +64,7 @@ class OverpassAPI():
                     with timeout(seconds=180):
                         api_response = self.overpy_instance.query(query.encode('utf8'))
 
-                    sleep(30) # added a sleep function to lesson the burden on the openmaps api. Not explicitly required
+                    sleep(30)  # added a sleep function to lesson the burden on the openmaps api. Not explicitly required
 
                 except overpy.exception.OverpassTooManyRequests:
                     logger.debug("OverpassTooManyRequests. This occurs when the script is spamming the OverpassAPI service. Sleeping for 120s".format(query))
@@ -78,7 +73,6 @@ class OverpassAPI():
 
                 except:
                     logger.debug("Unexpected error:".format(sys.exc_info()))
-                    raise StandardError,'Bogusness' # todo remove this
                     sleep(15)
                     continue
 
@@ -95,7 +89,7 @@ class OverpassAPI():
             '''
                 convert Overpass Result object to a hash, keep only the relevant keys
             '''
-            blacklisted_keys = ['_result','_node_ids','lon', 'lat']
+            blacklisted_keys = ['_result', '_node_ids', 'lon', 'lat']
 
             nodes = []
             for node in api_response.nodes:
@@ -118,8 +112,7 @@ class OverpassAPI():
             '''
                 Store the final response in the cache then return the response
             '''
-            final_response = {'nodes':nodes,'ways': ways}
-            self.cache.store_cache_fragment(fragment_key,final_response)
+            final_response = {'nodes': nodes, 'ways': ways}
+            self.cache.store_cache_fragment(fragment_key, final_response)
 
             return final_response
-

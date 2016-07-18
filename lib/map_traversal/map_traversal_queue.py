@@ -7,17 +7,15 @@ from lib.overpass.overpass_api import OverpassAPI
 
 logger = logging.getLogger('')
 
+
 class MapTraversalQueue():
     def __init__(self, boundaries, api = OverpassAPI(), cache = OverpassAPICache()):
-        self.queue = []
-        self.nodes = []
-        self.api = api
-        self.cache = cache
+        self.queue = [] ; self.nodes = []
+        self.api = api ; self.cache = cache
         self.lat_long_box_length = 1
         self.south_bound, self.west_bound, self.north_bound, self.east_bound = boundaries
         self.add_initial_node()
         self.traverse_bounds()
-        # self.process_nodes()
 
     def add_initial_node(self):
         '''
@@ -38,12 +36,12 @@ class MapTraversalQueue():
             if (node.north + self.lat_long_box_length) <= self.north_bound:
                 ''' move south to north if traversed to north boundary '''
                 logger.info("Appending New Node, Incremented to the North")
-                self.queue.append( MapTraversalNode([node.north, node.west, node.north + self.lat_long_box_length, node.east], self.api, self.cache))
+                self.queue.append(MapTraversalNode([node.north, node.west, node.north + self.lat_long_box_length, node.east], self.api, self.cache))
 
             elif (node.east + self.lat_long_box_length) <= self.east_bound:
                 ''' move west to east. if traversed to east boundary do nothing'''
                 logger.info("Appending New Node, Incremented to the East")
-                self.queue.append(MapTraversalNode( [self.south_bound, node.east, self.south_bound + self.lat_long_box_length, node.east + self.lat_long_box_length], self.api, self.cache))
+                self.queue.append(MapTraversalNode([self.south_bound, node.east, self.south_bound + self.lat_long_box_length, node.east + self.lat_long_box_length], self.api, self.cache))
 
     def process_nodes(self):
         '''

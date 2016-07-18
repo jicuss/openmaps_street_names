@@ -57,11 +57,11 @@ def main(logLevel, logFile):
     ''' add the way to a random node '''
     while len(data_queue) > 0:
         node = queue.nodes[random.randint(0,len(queue.nodes)-1)]
-        node.data['ways'].append(data_queue.pop())
+        node.response['ways'].append(data_queue.pop())
 
     for node in queue.nodes:
-        fragment_key = fragment_key_formatting(node.coordinate_fragment_key())
-        queue.cache.store_cache_fragment(fragment_key, node.data)
+        fragment_key = fragment_key_formatting(node.fragment_key())
+        queue.cache.store_cache_fragment(fragment_key, node.response)
 
 if __name__ == "__main__":
     log_path = os.path.abspath(os.path.join(__file__, '..', 'logs/'))

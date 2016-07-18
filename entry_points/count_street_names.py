@@ -35,7 +35,6 @@ def main(logLevel, logFile):
     stats = StreetNameStatistics(queue)
     stats.count_streets()
 
-    pdb.set_trace()
 
 if __name__ == "__main__":
     log_path = os.path.abspath(os.path.join(__file__, '..', 'logs/'))

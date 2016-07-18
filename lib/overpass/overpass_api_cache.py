@@ -14,8 +14,6 @@
 import logging
 import os
 import json
-import shutil
-import pdb
 
 logger = logging.getLogger('')
 
