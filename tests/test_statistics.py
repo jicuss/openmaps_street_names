@@ -18,7 +18,7 @@ class OverpassAPICacheTests(unittest.TestCase):
             This method is run only once at the beginning of the test.
             It:
                 - Generates a fake dataset
-                - Collects stats about the occurences of the street names in the fake dataset
+                - Collects stats about the occurrences of the street names in the fake dataset
                 - Makes the results of that analysis available to all tests
 
             This is more of an integrated functionality test than a unit test as it does rely on the supporting libraries to function
@@ -39,23 +39,20 @@ class OverpassAPICacheTests(unittest.TestCase):
         cache = OverpassAPICache('cache_fake')
         queue = MapTraversalQueue([32.5, -118.6, 34.1, -114.7], api, cache)
 
-        name_occurance = {'Main Street': 23,
-                          '215th Avenue': 5,
-                          'Jefferson Street': 8,
-                          'Ohio': 25,
-                          '220th': 1,
-                          'North Main Street': 15,
-                          'Walnut Street': 16,
-                          'County Road': 11,
-                          '180th': 6,
-                          'Terre Haute Road': 5,
-                          '125th Avenue': 1
-                          }
+        cls.name_occurrence = {'125th Avenue': 1, '220th': 1, '215th Avenue': 5, 'Jefferson Street': 8, '180th': 6, 'Ohio': 25, 'North Main Street': 15, 'Walnut Street': 16, 'County Road': 11, 'Terre Haute Road': 5, 'Main Street': 23}
+        cls.normalized_name_occurrence = {'180th': 6, '220th': 1, 'Terre Haute': 5, 'Walnut': 16, 'County': 11, '215th': 5, 'Jefferson': 8, '125th': 1, 'Ohio': 25, 'Main': 38}
+        cls.word_occurrence = {'North': 15, 'Haute': 5, 'Terre': 5, '180th': 6, '220th': 1, 'Walnut': 16, 'County': 11, '215th': 5, 'Jefferson': 8, '125th': 1, 'Ohio': 25, 'Main': 38, 'Avenue': 6, 'Road': 16, 'Street': 62}
 
         data_queue = []
-        for key in name_occurance.keys():
-            for i in range(0, name_occurance[key]):
+        for key in cls.name_occurrence.keys():
+            for i in range(0, cls.name_occurrence[key]):
                 data_queue.append({"tags": {"name": key, "tiger:county": "San Diego, CA"}})
+
+        ''' add invalid tiger:county record '''
+        data_queue.append({"tags": {"name": 'InvalidCountyRecord'}})
+
+        ''' add invalid postal code record '''
+        data_queue.append({"tags": {"name": 'InvalidPostalCodeRecord', "tiger:county": "Bogustown, NT"}})
 
         ''' randomize the order of the fake data, not neccesary but better emulates the response of openmaps '''
         random.shuffle(data_queue)
@@ -74,34 +71,29 @@ class OverpassAPICacheTests(unittest.TestCase):
 
     def test_exclusion_of_invalid_county(self):
         ''' verifies that streets without a valid county are not being included in the result set '''
-        pass
+        self.assertNotIn('InvalidCountyRecord',self.stats.fetch_results('streets')['sorted_keys'])
 
     def test_exclusion_of_invalid_postal_code(self):
         ''' verifies that streets without a valid postal code are not being included in the result set '''
-        pass
+        self.assertNotIn('InvalidPostalCodeRecord',self.stats.fetch_results('streets')['sorted_keys'])
 
     def test_unnormalized_street_name_count(self):
         ''' verifies that streets names are being properly counted '''
-
-        pass
+        for street in self.name_occurrence:
+            self.assertEquals(self.stats.fetch_results('streets')['count_hash'][street],self.name_occurrence[street])
 
     def test_normalized_street_name_count(self):
         '''
-            Verify that street names are being properly grouped after normalization.  Verifies both the name normalization routine and the counting is correct
+            Verify that street names are being properly grouped after normalization.
+            Verifies both the name normalization routine and the counting is correct
         '''
-        pass
-
-    def test_blacklisted_words_removal(self):
-        '''
-            Verify that words contained in the blacklist are being properly removed prior to being counted in the normalized street name count
-        '''
-        pass
+        for street in self.normalized_name_occurrence:
+            self.assertEquals(self.stats.fetch_results('streets_normalized')['count_hash'][street],self.normalized_name_occurrence[street])
 
     def test_word_count(self):
-        ''' verifies that word occurances are being properly counted '''
-
-        pass
-
+        ''' verifies that word occurrences are being properly counted '''
+        for word in self.word_occurrence:
+            self.assertEquals(self.stats.fetch_results('word_count')['count_hash'][word],self.word_occurrence[word])
 
 if __name__ == '__main__':
     unittest.main()
